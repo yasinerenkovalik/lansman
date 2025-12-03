@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import './Hero.css'
-import backgroundVideo from '../assets/backgraund2.mp4'
 
 function Hero() {
   const videoRef = useRef(null)
@@ -49,7 +48,7 @@ function Hero() {
         muted 
         playsInline 
         className="hero-video"
-        src={backgroundVideo}
+        src="/background.mp4"
       />
       <div className="hero-overlay"></div>
       <div className="hero-container">
