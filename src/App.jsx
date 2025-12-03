@@ -6,6 +6,7 @@ import Features from './components/Features'
 import LeadForm from './components/LeadForm'
 import ThankYou from './components/ThankYou'
 import Admin from './components/Admin'
+import SocialButtons from './components/SocialButtons'
 
 function LandingPage({ onFormSubmit }) {
   return (
@@ -13,6 +14,7 @@ function LandingPage({ onFormSubmit }) {
       <Hero />
       <Features />
       <LeadForm onSubmit={onFormSubmit} />
+      <SocialButtons />
     </div>
   )
 }
