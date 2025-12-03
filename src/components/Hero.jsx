@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import './Hero.css'
-import backgroundVideo from '../assets/backgraund2.mp4?url'
 
 function Hero() {
   const videoRef = useRef(null)
@@ -60,10 +59,9 @@ function Hero() {
             playsInline
             preload="auto"
             className="hero-video"
+            src="/background.mp4"
             onError={() => setVideoError(true)}
-          >
-            <source src={backgroundVideo} type="video/mp4" />
-          </video>
+          />
           <div className="hero-overlay"></div>
         </>
       ) : (

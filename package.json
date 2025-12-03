@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "server": "node server.js",
-    "build": "vite build",
+    "build": "vite build && npm run copy-video",
+    "copy-video": "cp src/assets/backgraund2.mp4 dist/background.mp4 || true",
     "lint": "eslint .",
     "preview": "vite preview"
   },
