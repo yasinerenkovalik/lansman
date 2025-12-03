@@ -1,0 +1,10 @@
+# Coolify Configuration
+# Video dosyasının build'e dahil edilmesi için
+
+# Build command
+build: npm run build
+
+# Ensure video is copied
+post-build: |
+  cp src/assets/backgraund2.mp4 dist/background.mp4 || true
+  ls -lh dist/background.mp4

@@ -59,7 +59,7 @@ function Hero() {
             playsInline
             preload="auto"
             className="hero-video"
-            src="/background.mp4"
+            src={import.meta.env.VITE_VIDEO_URL || "/background.mp4"}
             onError={() => setVideoError(true)}
           />
           <div className="hero-overlay"></div>
