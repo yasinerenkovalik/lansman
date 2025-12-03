@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './Hero.css'
+import backgroundVideo from '../assets/backgraund2.mp4'
 
 function Hero() {
+  const videoRef = useRef(null)
   const [timeLeft, setTimeLeft] = useState({
     days: 7,
     hours: 12,
@@ -10,6 +12,12 @@ function Hero() {
   })
 
   useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(err => {
+        console.log('Video autoplay:', err)
+      })
+    }
+
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev.seconds > 0) {
@@ -34,18 +42,30 @@ function Hero() {
 
   return (
     <section className="hero">
+      <video 
+        ref={videoRef}
+        autoPlay 
+        loop 
+        muted 
+        playsInline 
+        className="hero-video"
+        src={backgroundVideo}
+      />
+      <div className="hero-overlay"></div>
       <div className="hero-container">
         <div className="hero-badge">🔒 Sadece Davetliler İçin</div>
         
-        <h1 className="hero-title">
-          Finansal Özgürlüğün<br />
-          <span className="gradient-text">Kapalı Kapısı Aralanıyor</span>
-        </h1>
-        
-        <h2 className="hero-subtitle">
-          Türkiye'nin ilk "Yüksek Hacimli Görev Dağıtım Ağı" kuruluyor.<br />
-          Bankaların yıllık verdiğini, <strong>aylık kazanma potansiyeli</strong>.
-        </h2>
+        <div className="hero-text-box">
+          <h1 className="hero-title">
+            Finansal Özgürlüğün<br />
+            <span className="gradient-text">Kapalı Kapısı Aralanıyor</span>
+          </h1>
+          
+          <h2 className="hero-subtitle">
+            Türkiye'nin ilk "Yüksek Hacimli Görev Dağıtım Ağı" kuruluyor.<br />
+            Bankaların yıllık verdiğini, <strong>aylık kazanma potansiyeli</strong>.
+          </h2>
+        </div>
 
         <div className="hero-highlight">
           ⚡ Sadece ilk <span className="highlight-number">1.000 Operatör</span> kabul edilecektir

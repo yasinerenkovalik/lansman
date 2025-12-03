@@ -1,39 +1,83 @@
 import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import Hero from './components/Hero'
 import Features from './components/Features'
 import LeadForm from './components/LeadForm'
 import ThankYou from './components/ThankYou'
+import Admin from './components/Admin'
 
-function App() {
-  const [showThankYou, setShowThankYou] = useState(false)
-  const [queueNumber, setQueueNumber] = useState(0)
-
-  const handleFormSubmit = (formData) => {
-    // Simüle edilmiş sıra numarası
-    const randomQueue = Math.floor(Math.random() * 500) + 100
-    setQueueNumber(randomQueue)
-    setShowThankYou(true)
-    
-    // Burada backend'e veri gönderilecek
-    console.log('Form Data:', formData)
-  }
-
-  const handleSurveySubmit = (surveyData) => {
-    console.log('Survey Data:', surveyData)
-    // Backend'e anket verisi gönderilecek
-  }
-
-  if (showThankYou) {
-    return <ThankYou queueNumber={queueNumber} onSurveySubmit={handleSurveySubmit} />
-  }
-
+function LandingPage({ onFormSubmit }) {
   return (
     <div className="app">
       <Hero />
       <Features />
-      <LeadForm onSubmit={handleFormSubmit} />
+      <LeadForm onSubmit={onFormSubmit} />
     </div>
+  )
+}
+
+function App() {
+  const [showThankYou, setShowThankYou] = useState(false)
+  const [queueNumber, setQueueNumber] = useState(0)
+  const [userEmail, setUserEmail] = useState('')
+
+  const handleFormSubmit = async (formData) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+
+      const data = await response.json()
+      
+      if (data.success) {
+        setQueueNumber(data.queueNumber)
+        setUserEmail(formData.email)
+        setShowThankYou(true)
+      } else {
+        alert('Bir hata oluştu, lütfen tekrar deneyin.')
+      }
+    } catch (error) {
+      console.error('Form gönderme hatası:', error)
+      alert('Sunucuya bağlanılamadı. Lütfen server.js çalıştırın.')
+    }
+  }
+
+  const handleSurveySubmit = async (surveyData) => {
+    try {
+      await fetch('http://localhost:3001/api/surveys', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...surveyData,
+          email: userEmail
+        })
+      })
+    } catch (error) {
+      console.error('Anket gönderme hatası:', error)
+    }
+  }
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route 
+          path="/" 
+          element={
+            showThankYou 
+              ? <ThankYou queueNumber={queueNumber} onSurveySubmit={handleSurveySubmit} />
+              : <LandingPage onFormSubmit={handleFormSubmit} />
+          } 
+        />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
