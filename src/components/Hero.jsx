@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import './Hero.css'
+import backgroundVideo from '../assets/backgraund2.mp4?url'
 
 function Hero() {
   const videoRef = useRef(null)
+  const [videoError, setVideoError] = useState(false)
   const [timeLeft, setTimeLeft] = useState({
     days: 7,
     hours: 12,
@@ -11,10 +13,17 @@ function Hero() {
   })
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(err => {
-        console.log('Video autoplay:', err)
-      })
+    if (videoRef.current && !videoError) {
+      const playPromise = videoRef.current.play()
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.log('Video autoplay hatası:', err)
+          // Kullanıcı etkileşimi sonrası tekrar dene
+          document.addEventListener('click', () => {
+            videoRef.current?.play()
+          }, { once: true })
+        })
+      }
     }
 
     const timer = setInterval(() => {
@@ -41,16 +50,32 @@ function Hero() {
 
   return (
     <section className="hero">
-      <video 
-        ref={videoRef}
-        autoPlay 
-        loop 
-        muted 
-        playsInline 
-        className="hero-video"
-        src="/background.mp4"
-      />
-      <div className="hero-overlay"></div>
+      {!videoError ? (
+        <>
+          <video 
+            ref={videoRef}
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            preload="auto"
+            className="hero-video"
+            onError={() => setVideoError(true)}
+          >
+            <source src={backgroundVideo} type="video/mp4" />
+          </video>
+          <div className="hero-overlay"></div>
+        </>
+      ) : (
+        <div className="hero-background">
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+        </div>
+      )}
       <div className="hero-container">
         <div className="hero-badge">🔒 Sadece Davetliler İçin</div>
         
