@@ -3,7 +3,7 @@ import './Hero.css'
 
 function Hero() {
   const videoRef = useRef(null)
-  const [videoError, setVideoError] = useState(false)
+  const [videoError, setVideoError] = useState(true) // Video geçici olarak devre dışı
   const [timeLeft, setTimeLeft] = useState({
     days: 7,
     hours: 12,
@@ -58,9 +58,13 @@ function Hero() {
             muted 
             playsInline
             preload="auto"
+            crossOrigin="anonymous"
             className="hero-video"
             src={import.meta.env.VITE_VIDEO_URL || "/background.mp4"}
-            onError={() => setVideoError(true)}
+            onError={(e) => {
+              console.error('Video yükleme hatası:', e)
+              setVideoError(true)
+            }}
           />
           <div className="hero-overlay"></div>
         </>
