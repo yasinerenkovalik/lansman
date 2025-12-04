@@ -6,7 +6,7 @@ function Hero() {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const targetDate = new Date('2024-12-20T23:59:59').getTime()
+      const targetDate = new Date('2025-12-20T23:59:59').getTime()
       const now = new Date().getTime()
       const difference = targetDate - now
 

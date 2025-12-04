@@ -26,8 +26,7 @@ function App() {
 
   const handleFormSubmit = async (formData) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001'
-      const response = await fetch(`${apiUrl}/api/leads`, {
+      const response = await fetch('/api/leads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,15 +44,28 @@ function App() {
         alert('Bir hata oluştu, lütfen tekrar deneyin.')
       }
     } catch (error) {
-      console.error('Form gönderme hatası:', error)
-      alert('Sunucuya bağlanılamadı. Lütfen server.js çalıştırın.')
+      console.error('Backend çalışmıyor, localStorage kullanılıyor:', error)
+      
+      // Backend yoksa localStorage'a kaydet
+      const leads = JSON.parse(localStorage.getItem('leads') || '[]')
+      const newLead = {
+        ...formData,
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+        queueNumber: leads.length + 1
+      }
+      leads.push(newLead)
+      localStorage.setItem('leads', JSON.stringify(leads))
+      
+      setQueueNumber(newLead.queueNumber)
+      setUserEmail(formData.email)
+      setShowThankYou(true)
     }
   }
 
   const handleSurveySubmit = async (surveyData) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001'
-      await fetch(`${apiUrl}/api/surveys`, {
+      await fetch('/api/surveys', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +76,17 @@ function App() {
         })
       })
     } catch (error) {
-      console.error('Anket gönderme hatası:', error)
+      console.error('Backend çalışmıyor, localStorage kullanılıyor:', error)
+      
+      // Backend yoksa localStorage'a kaydet
+      const surveys = JSON.parse(localStorage.getItem('surveys') || '[]')
+      surveys.push({
+        ...surveyData,
+        email: userEmail,
+        id: Date.now(),
+        createdAt: new Date().toISOString()
+      })
+      localStorage.setItem('surveys', JSON.stringify(surveys))
     }
   }
 
