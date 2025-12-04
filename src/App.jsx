@@ -8,6 +8,9 @@ import ThankYou from './components/ThankYou'
 import Admin from './components/Admin'
 import SocialButtons from './components/SocialButtons'
 
+// Formspree form ID - https://formspree.io'dan al
+const FORMSPREE_ID = 'YOUR_FORMSPREE_ID' // Örn: 'xpznqwer'
+
 function LandingPage({ onFormSubmit }) {
   return (
     <div className="app">
@@ -26,33 +29,32 @@ function App() {
 
   const handleFormSubmit = async (formData) => {
     try {
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxw0cBvfJHgLlRR5ruWETYJ01bL9DD2p8jWBtpH7lU1FcdmSGbfivi4mPTqQa4qDeL7/exec'
-      
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 'lead',
-          ...formData
-        }),
-        mode: 'no-cors'
-      })
+      // Formspree'ye gönder (email olarak gelecek)
+      if (FORMSPREE_ID !== 'YOUR_FORMSPREE_ID') {
+        await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...formData,
+            _subject: 'Yeni Lansman Kaydı'
+          })
+        })
+      }
 
-      // no-cors mode'da response okunamaz, direkt başarılı kabul et
+      // localStorage'a kaydet
       const leads = JSON.parse(localStorage.getItem('leads') || '[]')
       const queueNum = leads.length + 1
-      leads.push({ ...formData, queueNumber: queueNum })
+      leads.push({ ...formData, queueNumber: queueNum, createdAt: new Date().toISOString() })
       localStorage.setItem('leads', JSON.stringify(leads))
       
       setQueueNumber(queueNum)
       setUserEmail(formData.email)
       setShowThankYou(true)
     } catch (error) {
-      console.error('Backend çalışmıyor, localStorage kullanılıyor:', error)
+      console.error('Hata:', error)
       
-      // Backend yoksa localStorage'a kaydet
       const leads = JSON.parse(localStorage.getItem('leads') || '[]')
       const newLead = {
         ...formData,
@@ -71,24 +73,21 @@ function App() {
 
   const handleSurveySubmit = async (surveyData) => {
     try {
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxw0cBvfJHgLlRR5ruWETYJ01bL9DD2p8jWBtpH7lU1FcdmSGbfivi4mPTqQa4qDeL7/exec'
+      // Formspree'ye gönder
+      if (FORMSPREE_ID !== 'YOUR_FORMSPREE_ID') {
+        await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...surveyData,
+            email: userEmail,
+            _subject: 'Lansman Anketi'
+          })
+        })
+      }
       
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 'survey',
-          ...surveyData,
-          email: userEmail
-        }),
-        mode: 'no-cors'
-      })
-    } catch (error) {
-      console.error('Backend çalışmıyor, localStorage kullanılıyor:', error)
-      
-      // Backend yoksa localStorage'a kaydet
       const surveys = JSON.parse(localStorage.getItem('surveys') || '[]')
       surveys.push({
         ...surveyData,
@@ -97,6 +96,8 @@ function App() {
         createdAt: new Date().toISOString()
       })
       localStorage.setItem('surveys', JSON.stringify(surveys))
+    } catch (error) {
+      console.error('Hata:', error)
     }
   }
 

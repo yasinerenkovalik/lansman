@@ -22,12 +22,12 @@ function Admin() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:3001/api/leads')
-      const result = await response.json()
-      setData(result)
+      // localStorage'dan veri al
+      const leads = JSON.parse(localStorage.getItem('leads') || '[]')
+      const surveys = JSON.parse(localStorage.getItem('surveys') || '[]')
+      setData({ leads, surveys })
     } catch (error) {
       console.error('Veri yükleme hatası:', error)
-      alert('Backend çalışmıyor. npm run server ile başlatın.')
     }
     setLoading(false)
   }
