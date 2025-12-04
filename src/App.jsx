@@ -26,23 +26,29 @@ function App() {
 
   const handleFormSubmit = async (formData) => {
     try {
-      const response = await fetch('/api/leads', {
+      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxw0cBvfJHgLlRR5ruWETYJ01bL9DD2p8jWBtpH7lU1FcdmSGbfivi4mPTqQa4qDeL7/exec'
+      
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          type: 'lead',
+          ...formData
+        }),
+        mode: 'no-cors'
       })
 
-      const data = await response.json()
+      // no-cors mode'da response okunamaz, direkt başarılı kabul et
+      const leads = JSON.parse(localStorage.getItem('leads') || '[]')
+      const queueNum = leads.length + 1
+      leads.push({ ...formData, queueNumber: queueNum })
+      localStorage.setItem('leads', JSON.stringify(leads))
       
-      if (data.success) {
-        setQueueNumber(data.queueNumber)
-        setUserEmail(formData.email)
-        setShowThankYou(true)
-      } else {
-        alert('Bir hata oluştu, lütfen tekrar deneyin.')
-      }
+      setQueueNumber(queueNum)
+      setUserEmail(formData.email)
+      setShowThankYou(true)
     } catch (error) {
       console.error('Backend çalışmıyor, localStorage kullanılıyor:', error)
       
@@ -65,15 +71,19 @@ function App() {
 
   const handleSurveySubmit = async (surveyData) => {
     try {
-      await fetch('/api/surveys', {
+      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxw0cBvfJHgLlRR5ruWETYJ01bL9DD2p8jWBtpH7lU1FcdmSGbfivi4mPTqQa4qDeL7/exec'
+      
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          type: 'survey',
           ...surveyData,
           email: userEmail
-        })
+        }),
+        mode: 'no-cors'
       })
     } catch (error) {
       console.error('Backend çalışmıyor, localStorage kullanılıyor:', error)
