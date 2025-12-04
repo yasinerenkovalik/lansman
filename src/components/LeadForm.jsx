@@ -8,15 +8,32 @@ function LeadForm({ onSubmit }) {
     volume: ''
   })
 
+  const formatPhone = (value) => {
+    // Sadece rakamları al
+    const numbers = value.replace(/\D/g, '')
+    
+    // 10 haneden fazla olmasın
+    if (numbers.length > 10) return formData.phone
+    
+    // Format: (5XX)-XXX-XX-XX
+    // Sadece rakamları göster, 3'ten az ise
+    if (numbers.length === 0) return ''
+    if (numbers.length <= 3) return numbers
+    // 4-6 hane: (5XX)-XXX
+    if (numbers.length <= 6) return `(${numbers.slice(0, 3)})-${numbers.slice(3)}`
+    // 7-8 hane: (5XX)-XXX-XX
+    if (numbers.length <= 8) return `(${numbers.slice(0, 3)})-${numbers.slice(3, 6)}-${numbers.slice(6)}`
+    // 9-10 hane: (5XX)-XXX-XX-XX
+    return `(${numbers.slice(0, 3)})-${numbers.slice(3, 6)}-${numbers.slice(6, 8)}-${numbers.slice(8)}`
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
     
     if (name === 'phone') {
-      // Sadece rakam al
-      const numbers = value.replace(/\D/g, '')
       setFormData({
         ...formData,
-        [name]: numbers
+        [name]: formatPhone(value)
       })
     } else {
       setFormData({
@@ -28,7 +45,20 @@ function LeadForm({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit(formData)
+    
+    // Telefonu sadece rakam olarak gönder
+    const cleanPhone = formData.phone.replace(/\D/g, '')
+    
+    // 5 ile başlamalı ve 10 hane olmalı
+    if (!cleanPhone.startsWith('5') || cleanPhone.length !== 10) {
+      alert('Lütfen geçerli bir telefon numarası giriniz (5 ile başlamalı, 10 hane)')
+      return
+    }
+    
+    onSubmit({
+      ...formData,
+      phone: cleanPhone
+    })
   }
 
   return (
@@ -63,14 +93,12 @@ function LeadForm({ onSubmit }) {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="5XXXXXXXXXX"
-              pattern="5[0-9]{10}"
-              maxLength="11"
+              placeholder="(5XX)-XXX-XX-XX"
               required
-              title="500 ile başlayan 11 haneli telefon numarası giriniz"
+              title="5 ile başlayan 10 haneli telefon numarası giriniz"
             />
             <small style={{color: 'var(--text-muted)', fontSize: '0.85rem'}}>
-              500 ile başlayan 11 haneli numara (örn: 5551234567)
+              5 ile başlayan 10 haneli numara (örn: (555)-123-45-67)
             </small>
           </div>
 
