@@ -41,7 +41,7 @@ function Hero() {
         playsInline
         className="hero-video"
       >
-        <source src="/background.mp4" type="video/mp4" />
+        <source src="https://res.cloudinary.com/dim2vffww/video/upload/v1764864627/backgraund2_aned4o.mp4" type="video/mp4" />
       </video>
       <div className="hero-overlay"></div>
       
