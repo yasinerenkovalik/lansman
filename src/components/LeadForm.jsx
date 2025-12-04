@@ -9,10 +9,21 @@ function LeadForm({ onSubmit }) {
   })
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+    const { name, value } = e.target
+    
+    if (name === 'phone') {
+      // Sadece rakam al
+      const numbers = value.replace(/\D/g, '')
+      setFormData({
+        ...formData,
+        [name]: numbers
+      })
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      })
+    }
   }
 
   const handleSubmit = (e) => {
@@ -52,9 +63,15 @@ function LeadForm({ onSubmit }) {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="+90 5XX XXX XX XX"
+              placeholder="5XXXXXXXXXX"
+              pattern="5[0-9]{10}"
+              maxLength="11"
               required
+              title="500 ile başlayan 11 haneli telefon numarası giriniz"
             />
+            <small style={{color: 'var(--text-muted)', fontSize: '0.85rem'}}>
+              500 ile başlayan 11 haneli numara (örn: 5551234567)
+            </small>
           </div>
 
           <div className="form-group">
