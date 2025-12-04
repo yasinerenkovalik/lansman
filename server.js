@@ -13,7 +13,7 @@ const PORT = 3001
 app.use(cors())
 app.use(express.json())
 
-const DATA_FILE = path.join(__dirname, 'leads.json')
+const DATA_FILE = path.join(__dirname, 'data', 'leads.json')
 
 // Leads dosyası yoksa oluştur
 if (!fs.existsSync(DATA_FILE)) {

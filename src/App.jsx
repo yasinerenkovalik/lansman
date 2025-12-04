@@ -26,7 +26,8 @@ function App() {
 
   const handleFormSubmit = async (formData) => {
     try {
-      const response = await fetch('http://localhost:3001/api/leads', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+      const response = await fetch(`${apiUrl}/api/leads`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +52,8 @@ function App() {
 
   const handleSurveySubmit = async (surveyData) => {
     try {
-      await fetch('http://localhost:3001/api/surveys', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+      await fetch(`${apiUrl}/api/surveys`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

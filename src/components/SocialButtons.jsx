@@ -13,12 +13,6 @@ function SocialButtons() {
       icon: '✈️',
       url: 'https://t.me/username', // Username'i değiştir
       color: '#0088cc'
-    },
-    {
-      name: 'Instagram',
-      icon: '📷',
-      url: 'https://instagram.com/username', // Username'i değiştir
-      color: '#E4405F'
     }
   ]
 
