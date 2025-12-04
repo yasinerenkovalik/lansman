@@ -8,8 +8,8 @@ import ThankYou from './components/ThankYou'
 import Admin from './components/Admin'
 import SocialButtons from './components/SocialButtons'
 
-// Formspree form ID - https://formspree.io'dan al
-const FORMSPREE_ID = 'YOUR_FORMSPREE_ID' // Örn: 'xpznqwer'
+// Formspree form ID
+const FORMSPREE_ID = 'mdkqdekw'
 
 function LandingPage({ onFormSubmit }) {
   return (
