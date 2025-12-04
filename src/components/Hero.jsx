@@ -12,19 +12,45 @@ function Hero() {
   })
 
   useEffect(() => {
-    if (videoRef.current && !videoError) {
-      const playPromise = videoRef.current.play()
-      if (playPromise !== undefined) {
-        playPromise.catch(err => {
-          console.log('Video autoplay hatası:', err)
-          // Kullanıcı etkileşimi sonrası tekrar dene
-          document.addEventListener('click', () => {
-            videoRef.current?.play()
-          }, { once: true })
-        })
+    const video = videoRef.current
+    
+    if (video && !videoError) {
+      // Video metadata yüklendiğinde oynat
+      const handleLoadedMetadata = () => {
+        const playPromise = video.play()
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log('Video başarıyla oynatılıyor')
+            })
+            .catch(err => {
+              console.error('Video autoplay hatası:', err)
+              // Kullanıcı etkileşimi sonrası tekrar dene
+              const playOnInteraction = () => {
+                video.play().catch(e => console.error('Manuel play hatası:', e))
+                document.removeEventListener('click', playOnInteraction)
+                document.removeEventListener('touchstart', playOnInteraction)
+              }
+              document.addEventListener('click', playOnInteraction)
+              document.addEventListener('touchstart', playOnInteraction)
+            })
+        }
+      }
+
+      video.addEventListener('loadedmetadata', handleLoadedMetadata)
+      
+      // Video yüklenmeye başladıysa direkt oynat
+      if (video.readyState >= 2) {
+        handleLoadedMetadata()
+      }
+
+      return () => {
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata)
       }
     }
+  }, [videoError])
 
+  useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev.seconds > 0) {
@@ -57,15 +83,17 @@ function Hero() {
             loop 
             muted 
             playsInline
-            preload="auto"
+            preload="metadata"
             crossOrigin="anonymous"
             className="hero-video"
-            src={import.meta.env.VITE_VIDEO_URL || "/background.mp4"}
             onError={(e) => {
               console.error('Video yükleme hatası:', e)
               setVideoError(true)
             }}
-          />
+          >
+            <source src={import.meta.env.VITE_VIDEO_URL || "/background.mp4"} type="video/mp4; codecs=avc1.42E01E,mp4a.40.2" />
+            <source src={import.meta.env.VITE_VIDEO_URL || "/background.mp4"} type="video/mp4" />
+          </video>
           <div className="hero-overlay"></div>
         </>
       ) : (
