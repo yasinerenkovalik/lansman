@@ -59,7 +59,7 @@ function ThankYou({ queueNumber, onSurveySubmit }) {
 
           <form onSubmit={handleSubmit} className="survey-form">
             <div className="form-group">
-              <label>Daha önce P2P, Arbitraj veya Kripto Transfer işlemi yaptınız mı?</label>
+              <label>Daha önce ATM den para yatırma-çekme, FAST-HAVALE-EFT veya Kripto Para Transfer işlemi yaptınız mı?</label>
               <div className="radio-group">
                 <label className="radio-label">
                   <input
