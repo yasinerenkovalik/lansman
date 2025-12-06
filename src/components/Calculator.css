@@ -38,8 +38,16 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.input-group {
+.inputs-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   margin-bottom: 40px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
 }
 
 .input-group label {
@@ -50,10 +58,11 @@
   color: var(--text-primary);
 }
 
-.amount-input {
+.amount-input,
+.transactions-select {
   width: 100%;
   padding: 18px 24px;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid rgba(255, 255, 255, 0.2);
@@ -63,7 +72,8 @@
   text-align: center;
 }
 
-.amount-input:focus {
+.amount-input:focus,
+.transactions-select:focus {
   outline: none;
   border-color: var(--primary-color);
   background: rgba(255, 255, 255, 0.15);
@@ -72,6 +82,15 @@
 
 .amount-input::placeholder {
   color: rgba(255, 255, 255, 0.4);
+}
+
+.transactions-select {
+  cursor: pointer;
+}
+
+.transactions-select option {
+  background: #1a1a2e;
+  color: var(--text-primary);
 }
 
 .results-grid {
@@ -127,6 +146,17 @@
   color: var(--primary-color);
 }
 
+.result-value.monthly {
+  color: #fbbf24;
+  font-size: 2.2rem;
+}
+
+.result-card.highlight-strong {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
+  border-color: #fbbf24;
+  border-width: 2px;
+}
+
 .currency {
   font-size: 1.2rem;
   font-weight: 600;
@@ -159,6 +189,11 @@
     padding: 30px 20px;
   }
 
+  .inputs-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
   .results-grid {
     grid-template-columns: 1fr;
   }
@@ -167,8 +202,13 @@
     font-size: 1.5rem;
   }
 
-  .amount-input {
-    font-size: 1.2rem;
+  .result-value.monthly {
+    font-size: 1.8rem;
+  }
+
+  .amount-input,
+  .transactions-select {
+    font-size: 1rem;
     padding: 15px 20px;
   }
 }
