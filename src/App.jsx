@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import Hero from './components/Hero'
+import Calculator from './components/Calculator'
 import Features from './components/Features'
 import LeadForm from './components/LeadForm'
 import ThankYou from './components/ThankYou'
@@ -9,12 +10,13 @@ import Admin from './components/Admin'
 import SocialButtons from './components/SocialButtons'
 
 // Formspree form ID
-const FORMSPREE_ID = 'mdkqdekw'
+const FORMSPREE_ID = 'xqarlola'
 
 function LandingPage({ onFormSubmit }) {
   return (
     <div className="app">
       <Hero />
+      <Calculator />
       <Features />
       <LeadForm onSubmit={onFormSubmit} />
       <SocialButtons />

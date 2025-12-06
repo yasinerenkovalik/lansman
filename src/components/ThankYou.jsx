@@ -44,8 +44,8 @@ function ThankYou({ queueNumber, onSurveySubmit }) {
         <div className="success-icon">🎉</div>
         <h1 className="thank-you-title">Kaydınız Alındı!</h1>
         <div className="queue-info">
-          <p className="queue-text">Sırada</p>
-          <p className="queue-number">#{queueNumber}</p>
+          <p className="queue-text">Sırada ki</p>
+          <p className="queue-number">#{queueNumber}.</p>
           <p className="queue-text">kişisiniz</p>
         </div>
 
